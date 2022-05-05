@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 from . import models, forms
 
@@ -36,3 +37,8 @@ def user_logout(request):
 
 def user_register(request):
     ...
+
+
+@login_required
+def user_dashboard(request):
+    render(request, 'account/dashboard.html', {'section': 'dashboard'})
