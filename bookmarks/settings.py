@@ -149,3 +149,13 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 LOGIN_REDIRECT_URL = 'account:dashboard'
 LOGIN_URL = 'account:login'
 LOGOUT_URL = 'account:logout'
+
+
+# Backend authenticação config
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    # Caso nenhum usuário seja devolvido pelo ModelBackend
+    # as credenciais serão conferidas pelo backend personalizado abaixo
+    'account.authentication.EmailAuthBackend',
+]
