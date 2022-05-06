@@ -31,6 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # My apps
+    'account.apps.AccountConfig',
+
+    # Apps default
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,8 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # My apps
-    'account.apps.AccountConfig',
 ]
 
 MIDDLEWARE = [
@@ -130,9 +132,14 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# EMAIL CONFIG
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # LOGIN CONFIG
-LOGOUT_REDIRECT_URL = 'account:login'
+
+# LOGOUT_REDIRECT_URL = 'account:login'
 
 LOGIN_REDIRECT_URL = 'account:dashboard'
 LOGIN_URL = 'account:login'
