@@ -6,10 +6,11 @@ from . import views
 app_name = 'account'
 
 urlpatterns = [
-    path('login/', auth_views.LoginView.as_view(), name="login"),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('', views.user_dashboard, name="dashboard"),
     path('register/', views.user_register, name="register"),
+    
+    path('login/', auth_views.LoginView.as_view(), name="login"),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     # Mudar senha
     path('password_change/',

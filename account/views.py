@@ -1,42 +1,36 @@
-from django.shortcuts import render,HttpResponse, redirect
-from django.urls import reverse, reverse_lazy
-from django.contrib import auth
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib import auth
 
-from . import models, forms
-
-
-# Create your views here.
-# def user_login(request):
-#     if request.method == "POST":
-#         form = forms.LoginForm(request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             user = auth.authenticate(
-#                 request, username=username, password=password)
-#             if user is not None:
-#                 if user.is_active:
-#                     auth.login(request, user)
-#                     return HttpResponse('Authenticado')
-#                 else:
-#                     return HttpResponse('Conta desativada')
-#             else:
-#                 return HttpResponse('Nome ou sneha invalidos.')
-#     elif request.method == 'GET':
-#         form = forms.LoginForm()
-    
-#     return render(request, 'account/login.html', {'form': form})
-
-
-# def user_logout(request):
-#     if request.user.is_authenticated:
-#         auth.logout(request)
-#     return redirect(reverse('account:login'))
+from . import forms
 
 
 def user_register(request):
-    ...
+    if request.user.is_authenticated:
+        return redirect('account:dashboard')
+
+    if request.method == "POST":
+        user_form = forms.UserRegistrationForm(request.POST)
+        if user_form.is_valid():
+            # Cria um objeto para o novo usuário, mas não o salva
+            new_user = user_form.save(commit=False)
+            # Define a senha escolhida
+            new_user.set_password(
+                user_form.cleaned_data['password']
+            )
+            # Salva o objeto user
+            new_user.save()
+            return render(request, 'registration/register_done.html', {
+                'new_user': new_user
+            })
+    else:
+        user_form = forms.UserRegistrationForm()
+
+
+    return render(request, 'registration/register.html', {
+        'user_form': user_form,
+    })
 
 
 @login_required

@@ -30,7 +30,8 @@
           Hello {{ user.first_name }}, 
           <a href="{% url "account:logout" %}">Logout</a>
         {% else %}
-          <a href="{% url 'account:login' %}">Log-in</a>
+          <a href="{% url 'account:login' %}">Log-in</a>, 
+          <a href="{% url 'account:register' %}">Sign-in</a>
         {% endif %}
       </span>
     </div>
