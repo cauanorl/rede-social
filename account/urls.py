@@ -8,8 +8,9 @@ app_name = 'account'
 urlpatterns = [
     path('', views.user_dashboard, name="dashboard"),
     path('register/', views.user_register, name="register"),
-    
-    path('login/', auth_views.LoginView.as_view(), name="login"),
+    path('edit/', views.user_edit, name='edit'),
+
+    path('login/', auth_views.LoginView.as_view(redirect_authenticated_user=True), name="login"),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     # Mudar senha

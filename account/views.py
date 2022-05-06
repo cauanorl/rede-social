@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
+
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib import auth
+from django.contrib import messages
 
 from . import forms
+from . import models
 
 
 def user_register(request):
@@ -21,6 +22,9 @@ def user_register(request):
             )
             # Salva o objeto user
             new_user.save()
+            # Cria um profile para o novo usuário
+            models.Profile.objects.create(user=new_user)
+
             return render(request, 'registration/register_done.html', {
                 'new_user': new_user
             })
@@ -34,6 +38,32 @@ def user_register(request):
 
 
 @login_required
+def user_edit(request):
+    if request.method == "POST":
+        user_form = forms.UserEditForm(
+            data=request.POST, instance=request.user)
+        profile_form = forms.ProfileEditForm(
+            data=request.POST, 
+            instance=request.user.profile,
+            files=request.FILES)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            profile_form.save()
+            user_form.save()
+            messages.success(request, 'Profile updated successfully.')
+        else:
+            messages.error(request, 'Error updating your profile.')
+    else:
+        user_form = forms.UserEditForm(instance=request.user)
+        profile_form = forms.ProfileEditForm(instance=request.user.profile)
+    
+    return render(request, 'account/edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    })
+
+
+@login_required
 def user_dashboard(request):
-    return render(request, 'registration/dashboard.html', {
+    return render(request, 'account/dashboard.html', {
         'section': 'dashboard'})
