@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
+from django.conf import settings
+
 from . import forms
 from . import models
 
@@ -55,6 +57,8 @@ def user_edit(request):
             messages.error(request, 'Error updating your profile.')
     else:
         user_form = forms.UserEditForm(instance=request.user)
+        if not getattr(request.user, 'profile', False):
+            models.Profile.objects.create(user=request.user)
         profile_form = forms.ProfileEditForm(instance=request.user.profile)
     
     return render(request, 'account/edit.html', {

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-*rezq2*d_1#$io8zx(e%fh(ru1xm4t+521s1_i7b$$t##%me5w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mysite.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -41,6 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Apps externos
+    # Fazer autenticação com outrs conta como: Google, Facebook ou Twitter
+    'social_django',  
+
+    # Rodar o servidor em HTTPS para PRODUÇÃO
+    'django_extensions',
 
 ]
 
@@ -158,4 +165,16 @@ AUTHENTICATION_BACKENDS = [
     # Caso nenhum usuário seja devolvido pelo ModelBackend
     # as credenciais serão conferidas pelo backend personalizado abaixo
     'account.authentication.EmailAuthBackend',
+    
+    # Autenticação social
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.twitter.TwitterOAuth'
 ]
+
+
+SOCIAL_AUTH_FACEBOOK_KEY = ''
+SOCIAL_AUTH_FACEBOOK_SECRET = ''
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+
+SOCIAL_AUTH_TWITTER_KEY = ''
+SOCIAL_AUTH_TWITTER_SECRET = ''
