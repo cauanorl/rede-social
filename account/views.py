@@ -45,7 +45,7 @@ def user_edit(request):
         user_form = forms.UserEditForm(
             data=request.POST, instance=request.user)
         profile_form = forms.ProfileEditForm(
-            data=request.POST, 
+            data=request.POST,
             instance=request.user.profile,
             files=request.FILES)
         
@@ -58,6 +58,7 @@ def user_edit(request):
     else:
         user_form = forms.UserEditForm(instance=request.user)
         if not getattr(request.user, 'profile', False):
+            # Cria o Profile caso o usuário não o tenha
             models.Profile.objects.create(user=request.user)
         profile_form = forms.ProfileEditForm(instance=request.user.profile)
     
