@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # Apps externos
     # Fazer autenticação com outrs conta como: Google, Facebook ou Twitter
     'social_django',  
+    'easy_thumbnails',
 
     # Rodar o servidor em HTTPS para PRODUÇÃO
     'django_extensions',

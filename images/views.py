@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from .forms import ImageCreateForm
+from .models import Image
 
 
 # Create your views here.
@@ -13,8 +14,11 @@ def image_created(request):
         form = ImageCreateForm(data=request.POST)
         if form.is_valid():
             # Os dados do formulário são validos
-            cd = form.cleaned_data
-            new_item = form.save(commit=False)
+            try:
+                new_item = form.save(commit=False)
+            except:
+                messages.error(request, "This image can't be used.")
+                return redirect('account:dashboard')
 
             # Atribui o usuário atual ao item
             new_item.user = request.user
@@ -31,3 +35,11 @@ def image_created(request):
         'section': 'images',
         'form': form,
     })
+
+
+def image_detail(request, id, slug):
+    image = get_object_or_404(Image, id=id, slug=slug)
+    return render(request, 'images/image/detail.html', {
+        'image': image,
+        'section': 'images',
+    })    

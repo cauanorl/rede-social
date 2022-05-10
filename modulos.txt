@@ -1,0 +1,6 @@
+pip install easy-thumbnails
+pip install --upgrade certifi
+pip install social-auth-app-django
+pip install django-extensions
+pip install werkzeug==2.1.0
+pip install pyOpenSSL
