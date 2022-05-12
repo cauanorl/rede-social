@@ -51,30 +51,32 @@
 
   {% endwith %}
 
-  {% block domready %}
-    $('a.like').click(function(e) {
-      e.preventDefault();
-      $.post('{% url "images:like" %}',
-        {
-          id: $(this).data('id'),
-          action: $(this).data('action')
-        },
-        function(data) {
-          if (data['status'] == 'ok') {
-            var previous_action = $('a.like').data('action');
-            
-            // alterna data-action
-            $('a.like').data('action', previous_action == 'like' ? 'unlike': 'like');
-  
-            // alterna o texto do link
-            $('a.like').text(previous_action == "like" ? "Unlike": "Like");
-            
-            // Atualiza o total de links
-            var previous_likes = parseInt($('span.count .total').text());
-            $('span.count .total').text(previous_action == "like" ? previous_likes + 1 : previous_likes - 1)
+  <script>
+  // {% block domready %}
+      $('a.like').click(function(e) {
+        e.preventDefault();
+        $.post('{% url "images:like" %}',
+          {
+            id: $(this).data('id'),
+            action: $(this).data('action'),
+          },
+          function(data) {
+            if (data['status'] == 'ok') {
+              var previous_action = $('a.like').data('action');
+              
+              // alterna data-action
+              $('a.like').data('action', previous_action == 'like' ? 'unlike': 'like');
+    
+              // alterna o texto do link
+              $('a.like').text(previous_action == "like" ? "Unlike": "Like");
+              
+              // Atualiza o total de links
+              var previous_likes = parseInt($('span.count .total').text());
+              $('span.count .total').text(previous_action == "like" ? previous_likes + 1 : previous_likes - 1);
+            }
           }
-        }
-      );
-    })
-  {% endblock %}
+        );
+      })
+  // {% endblock %}
+  </script>
 {% endblock %}
