@@ -1,9 +1,17 @@
-class SeiLa:
-    parede = 'as'
+class al:
+    def __init__(self):
+        self._name = "Senha"
+    
+    @property
+    def name(self):
+        return "Nome oculto"
+    
+    @name.setter
+    def name(self, new_name):
+        self._name = new_name
 
 
-valor = SeiLa()
+algo = al()
 
-print(getattr(valor, 'parede', False))
-
-
+algo.name = 'Name is anonymous'
+print(algo.name)

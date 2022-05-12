@@ -1,4 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -30,7 +34,7 @@ def image_created(request):
         # Cria o formulário com os dados fornecidos
         # pelo Bookmarklet via GET
         form = ImageCreateForm(request.GET)
-    
+
     return render(request, 'images/image/create.html', {
         'section': 'images',
         'form': form,
@@ -42,4 +46,24 @@ def image_detail(request, id, slug):
     return render(request, 'images/image/detail.html', {
         'image': image,
         'section': 'images',
-    })    
+    })
+
+
+# Devolve um objeto HttpResponseNotAllowed (Código de status 405)
+# Se a requisição não for do tipo POST
+@login_required
+@require_POST
+def image_like(request):
+    image_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if image_id and action:
+        try:
+            image = get_object_or_404(Image, id=image_id)
+            if action == "like":
+                image.users_like.add(request.user)
+            else:
+                image.users_like.remove(request.user)
+            return JsonResponse({'status': 'ok'})
+        except:
+            pass
+    return JsonResponse({'status': 'error'})
