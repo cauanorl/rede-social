@@ -52,7 +52,7 @@
   {% endwith %}
 
   <script>
-  // {% block domready %}
+    {% block domready %}
       $('a.like').click(function(e) {
         e.preventDefault();
         $.post('{% url "images:like" %}',
@@ -77,6 +77,6 @@
           }
         );
       })
-  // {% endblock %}
+    {% endblock %}
   </script>
 {% endblock %}
