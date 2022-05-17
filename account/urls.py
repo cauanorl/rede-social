@@ -43,5 +43,6 @@ urlpatterns = [
           name="password_reset_complete"),
     
     path('users/', views.user_list, name="list"),
-    path("users/<username>/", views.user_detail, name="detail")
+    path('users/follow/', views.user_follow, name="follow"),
+    path("users/<username>/", views.user_detail, name="detail"),
 ]
