@@ -12,6 +12,7 @@ from django.conf import settings
 
 from common.decorators import ajax_required
 from actions.utils import create_action
+from actions.models import Action
 
 from . import forms
 from . import models
@@ -79,8 +80,19 @@ def user_edit(request):
 
 @login_required
 def user_dashboard(request):
+    actions = Action.objects.exclude(user=request.user)  # Exclui as próprias ações
+    # Retorna todos os valores de id como uma lista.
+    following_ids = request.user.following.values_list('id', flat=True)
+
+    if following_ids:
+        # Se o usuário estiver seguindo outros usuários, 
+        # obtém somente as suas ações
+        actions = actions.filter(user__id__in=following_ids)
+    actions = actions.select_related('user', 'user__profile') \
+                     .prefetch_related('target')[:10]  # Retorna as 10 últimas ações
+
     return render(request, 'account/dashboard.html', {
-        'section': 'dashboard'})
+        'section': 'dashboard', "actions": actions})
 
 
 @login_required
@@ -117,5 +129,5 @@ def user_follow(request):
             return JsonResponse({'status': "ok"})
         except User.DoesNotExist:
             return JsonResponse({"status": "error"})
-    
+
     return JsonResponse({"status": "error"})
