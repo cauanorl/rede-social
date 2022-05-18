@@ -2,3 +2,4 @@ __pycache__/
 venv/
 zt.js
 z.py
+db.sqlite3
