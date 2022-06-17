@@ -15,7 +15,7 @@ class Action(models.Model):
         on_delete=models.CASCADE
     )
     verb = models.CharField(max_length=255)
-    # TODO: Importante: a partir da Pág.209 
+    # TODO: Importante: a partir da Pág.209
     target_ct = models.ForeignKey(
         ContentType,
         blank=True,

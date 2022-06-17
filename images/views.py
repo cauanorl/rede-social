@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.http import HttpResponse
 
+from django.conf import settings
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.views.decorators.http import require_POST
@@ -14,6 +16,16 @@ from common.decorators import ajax_required
 from actions.utils import create_action
 from .forms import ImageCreateForm
 from .models import Image
+
+import redis
+
+
+# Conecta com o redis
+r = redis.Redis(
+    host=settings.REDIS_HOST,
+    port=settings.REDIS_PORT,
+    db=settings.REDIS_DB,
+)
 
 
 # Create your views here.
@@ -50,9 +62,30 @@ def image_created(request):
 
 def image_detail(request, id, slug):
     image = get_object_or_404(Image, id=id, slug=slug)
+    # Incrementa de 1 o total de visualização da imagem
+    total_views = r.incr(f'image:{image.id}:views')
+    # Incrementa de 1 o ranking da imagem
+    r.zincrby('image_ranking', 1, image.id)
     return render(request, 'images/image/detail.html', {
         'image': image,
         'section': 'images',
+        'total_views': total_views,
+    })
+
+
+@login_required
+def image_ranking(request):
+    # Obtém o dicionário do ranking das imagens
+    image_ranking = r.zrange('image_ranking', 0, -1, desc=True)[:10]
+    image_ranking_ids = [int(id) for id in image_ranking]
+    # Obtém as imagens mais visualizadas
+    most_viewed= list(Image.objects.filter(
+        id__in=image_ranking_ids))
+    most_viewed.sort(key=lambda x: image_ranking_ids.index(x.id))
+    
+    return render(request, 'images/image/ranking.html', {
+        'section': 'ranking',
+        'most_viewed': most_viewed,
     })
 
 

@@ -22,6 +22,9 @@
           <li {% if section == "people" %}class="selected"{% endif %}>
             <a href="{% url 'account:list' %}">People</a>
           </li>
+          <li {% if section == "ranking" %}class="selected"{% endif %}>
+            <a href="{% url 'images:ranking' %}">Ranking</a>
+          </li>
         </ul>
       {% endif %}
 
